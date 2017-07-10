@@ -204,12 +204,6 @@ def merge_nc(nc1, nc2, nc3, nomvar, m_int):
     smoothing[:,:,0,:] = (hcho1[:,:,0,:] + hcho3[:,:,-2,:])/ 2.
     smoothing[:,:,1,:] = (hcho1[:,:,1,:] + hcho3[:,:,-1,:])/ 2.
 
-#    for t in xrange(smoothing.shape[0]):
-#        for k in xrange(smoothing.shape[1]):
-#            for j in xrange(smoothing.shape[2]):
-#                for i in xrange(smoothing.shape[3]):
-#                    smoothing[t,k,j,i] = np.mean([hcho1[t,k,-j-1,i], hcho3[t,k,j,i]])
-    
     hcho[:,:,0:108,:]=hcho3#[:,:,2:108,:]
     #hcho[:,:,106:108,:] = smoothing
     hcho[:,:,108:159,:]=hcho1[:,:,:-2,:]
@@ -228,10 +222,22 @@ def merge_nc(nc1, nc2, nc3, nomvar, m_int):
 
 ##### MAIN CODE #####
 
+special_params = {'aermr04' : 'DST1',
+                  'aermr05' : 'DST2',
+                  'aermr06' : 'DST3',
+                  'aermr11' : 'SAMR'
+                  }
+
 start_time = time.time()
 
-params = ['go3', 'hcho', 'ch4', 'co', 'nox']
-params += ['q']
+#params = ['go3', 'hcho', 'ch4', 'co', 'nox']
+#params += ['q']
+params = ['aermr04',
+          'aermr05',
+          'aermr06',
+          'aermr11'
+          ]
+
 
 # TODO: figure out how u gonna do SO2
 
@@ -413,6 +419,9 @@ try:  # opens the file
                         'deet'  : 0,  # Timestep in sec
                         'ip1'   : ip1
                         })
+
+                    if nomvar in special_params.keys():
+                        new_record.update({'nomvar': special_params[nomvar]})
                     
                     #tmp_nparray = np.asfortranarray(monthly_mean[rp1])
                     tmp = monthly_mean[rp1]
