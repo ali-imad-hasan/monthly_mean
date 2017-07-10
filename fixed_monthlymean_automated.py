@@ -230,14 +230,9 @@ special_params = {'aermr04' : 'DST1',
 
 start_time = time.time()
 
-#params = ['go3', 'hcho', 'ch4', 'co', 'nox']
-#params += ['q']
-params = ['aermr04',
-          'aermr05',
-          'aermr06',
-          'aermr11'
-          ]
-
+params = ['aermr04', 'aermr05', 'aermr06', 'aermr11']
+params += ['go3', 'hcho', 'ch4', 'co', 'nox'] 
+params += ['q']
 
 # TODO: figure out how u gonna do SO2
 
@@ -254,7 +249,6 @@ lnsp_files = ["/space/hall1/sitestore/eccc/aq/r1/alh002/NCDF/LNSP/2008.nc",
 
 arc_dir = "/space/hall1/sitestore/eccc/aq/r1/alh002/NCDF/PART4/*"  # directory for the arctic files
 file_dir = ["/space/hall1/sitestore/eccc/aq/r1/alh002/NCDF/SPECIES/" + param.upper() for param in params]
-
 #file_dir = [file_dir[1]]  # this is temporary, just to work with one file
 
 #params = [params[3]]
@@ -286,13 +280,13 @@ try:  # opens the file
         print(file_id, open_fst)
 
         for var_i, nomvar in enumerate(params):
-            # stores the np arrays for the mean of each year
-            monthly_mean = np.zeros((len(file_dir), len(const_pressure), 161, 320))  
-
             # start at first year.
             # its just to crawl through the monthly mean array and input the mean for that year
             var_dir = glob.glob(file_dir[var_i]+"/*.nc")
             var_dir.sort()
+
+            # stores the np arrays for the mean of each year
+            monthly_mean = np.zeros((len(var_dir), len(const_pressure), 161, 320))  
 
             # goes thru each year
             for i, open_file in enumerate(var_dir):
