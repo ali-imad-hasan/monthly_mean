@@ -231,10 +231,9 @@ special_params = {'aermr04' : 'DST1',
 start_time = time.time()
 
 params = ['aermr04', 'aermr05', 'aermr06', 'aermr11']
-params += ['go3', 'hcho', 'ch4', 'co', 'nox'] 
-params += ['q']
-
-# TODO: figure out how u gonna do SO2
+#params += ['go3', 'hcho', 'ch4', 'co', 'nox'] 
+#params += ['q']
+#params = ['so2']  # this is just for so2
 
 # in this list, place the directory of the year
 lnsp_files = ["/space/hall1/sitestore/eccc/aq/r1/alh002/NCDF/LNSP/2008.nc", 
@@ -243,9 +242,9 @@ lnsp_files = ["/space/hall1/sitestore/eccc/aq/r1/alh002/NCDF/LNSP/2008.nc",
               "/space/hall1/sitestore/eccc/aq/r1/alh002/NCDF/LNSP/2011.nc", 
               "/space/hall1/sitestore/eccc/aq/r1/alh002/NCDF/LNSP/2012.nc"]
 #lnsp_files = [lnsp_files[1]]  # this is temporary, just to work with one file
+#lnsp_files = lnsp_files[1:]  # this is just for so2
 
 # in this list, place the directory of the year
-
 
 arc_dir = "/space/hall1/sitestore/eccc/aq/r1/alh002/NCDF/PART4/*"  # directory for the arctic files
 file_dir = ["/space/hall1/sitestore/eccc/aq/r1/alh002/NCDF/SPECIES/" + param.upper() for param in params]
@@ -258,6 +257,7 @@ month_list = ['/01JAN/','/02FEB/', '/03MAR/',
               '/07JLY/', '/08AUG/', '/09SEP/', 
               '/10OCT/', '/11NOV/', '/12DEC/']
 year_list  = ['2008.nc','2009.nc','2010.nc','2011.nc','2012.nc']
+#year_list  = year_list[1:]  # this is just for so2
 
 try:  # opens the file
 #    fileid = rmn.fstopenall(output_files[0], rmn.FST_RW)        
@@ -270,7 +270,7 @@ try:  # opens the file
         filename = '/space/hall1/sitestore/eccc/aq/r1/alh002/FST_STORAGE/output_file_{0}.fst'.format(temp) 
         
         # comment this line out if you're not wanting to make brand new files
-        #tmp = open(filename, 'w+'); tmp.close()
+        tmp = open(filename, 'w+'); tmp.close()
 
         output_file = filename
         output_files = [output_file]
@@ -305,7 +305,8 @@ try:  # opens the file
                 
                 print param.shape
                 timelen, levlen, latlen, lonlen = param.shape  # get the number of datapoints of each
-                param = shift_lon(param)
+                #param = shift_lon(param)
+                param = param[:, :, ::-1]
                 param = vert_interp(pressures, param)  # temp
                 print param.shape
                 print "Obtaining monthly mean..."
